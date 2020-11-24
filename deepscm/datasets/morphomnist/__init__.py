@@ -77,8 +77,8 @@ class MorphoMNISTLike(Dataset):
         self.root_dir = root_dir
         self.train = train
         images, labels, metrics_df = load_morphomnist_like(root_dir, train, columns)
-        self.images = torch.as_tensor(images)
-        self.labels = torch.as_tensor(labels)
+        self.images = torch.as_tensor(np.array(images))
+        self.labels = torch.as_tensor(np.array(labels))
         if columns is None:
             columns = metrics_df.columns
         self.metrics = {col: torch.as_tensor(metrics_df[col]) for col in columns}
@@ -102,7 +102,7 @@ if __name__ == '__main__':
     dataset = MorphoMNISTLike(root_dir="/vol/biomedic/users/dc315/mnist/original",
                               columns=['slant', 'thickness'], train=False)
     print(dataset.columns)
-    data_loader = DataLoader(dataset, batch_size=10, shuffle=True)
+    data_loader = DataLoader(dataset, batch_size=10, shuffle=True, num_workers=4)
 
     for batch in data_loader:
         print(batch)
